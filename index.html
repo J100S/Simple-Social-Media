@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Local Social Media App</title>
+<style>
+  /* Reset and base */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 700px;
+    margin: 1rem auto;
+    padding: 1rem;
+    background: #f5f7fa;
+    color: #333;
+  }
+  h1, h2, h3 {
+    color: #222;
+  }
+  /* Navigation */
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  nav button {
+    padding: 0.5rem 1.2rem;
+    border: none;
+    border-radius: 25px;
+    background: #0078d4;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+  }
+  nav button:hover:not(:disabled) {
+    background: #005a9e;
+  }
+  nav button:disabled {
+    background: #a1a1a1;
+    cursor: default;
+  }
+  /* Error message */
+  #error {
+    color: #d93025;
+    text-align: center;
+    margin-bottom: 1rem;
+    min-height: 1.2rem;
+  }
+  /* Views */
+  .view {
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  }
+  .hidden {
+    display: none !important;
+  }
+  /* Forms */
+  input, textarea {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    margin: 0.5rem 0 1rem;
+    border: 1.8px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+  }
+  input:focus, textarea:focus {
+    border-color: #0078d4;
+    outline: none;
+  }
+  button.action-btn {
+    background: #0078d4;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 0.7rem 1.5rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color 0.3s ease;
+  }
+  button.action-btn:hover:not(:disabled) {
+    background: #005a9e;
+  }
+  button.action-btn:disabled {
+    background: #a1a1a1;
+    cursor: not-allowed;
+  }
+  /* Feed */
+  #feed {
+    margin-top: 1.5rem;
+  }
+  .post {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1rem;
+    background: #fafafa;
+  }
+  .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #0078d4;
+  }
+  .post-content {
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+    white-space: pre-wrap;
+  }
+  .post-footer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  .post-footer button.like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #0078d4;
+    font-weight: 600;
+  }
+  .post-footer button.like-btn.liked {
+    color: #d93025;
+  }
+  .comments-section {
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #ccc;
+  }
+  .comment {
+    padding: 0.3rem 0.5rem;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+  }
+  .comment:last-child {
+    border-bottom: none;
+  }
+  .comment strong {
+    color: #0078d4;
+  }
+  /* Comment input */
+  .comment-input {
+    margin-top: 0.7rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .comment-input textarea {
+    flex: 1;
+    resize: vertical;
+  }
+  .comment-input button {
+    flex-shrink: 0;
+    align-self: flex-end;
+  }
+  /* Profile */
+  #profileView {
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    margin-top: 1rem;
+  }
+  #profileView h3 {
+    margin-top: 0;
+    color: #0078d4;
+  }
+  #profilePosts .post {
+    background: #e6f0fb;
+  }
+  /* Search */
+  #searchSection {
+    margin-bottom: 1rem;
+  }
+  #searchInput {
+    width: calc(100% - 110px);
+    display: inline-block;
+    padding: 0.5rem 0.8rem;
+    font-size: 1rem;
+    border: 1.8px solid #ccc;
+    border-radius: 8px;
+    transition: border-color 0.2s ease;
+  }
+  #searchBtn {
+    padding: 0.5rem 1rem;
+    margin-left: 0.5rem;
+    background: #0078d4;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  #searchResults {
+    margin-top: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fafafa;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .search-result-item {
+    padding: 0.5rem 0.8rem;
+    cursor: pointer;
+  }
+  .search-result-item:hover {
+    background: #e6f0fb;
+  }
+  /* Responsive */
+  @media (max-width: 480px) {
+    body {
+      margin: 0.5rem;
+      padding: 0.5rem;
+    }
+    nav {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    #searchInput {
+      width: 100%;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    #searchBtn {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<h1>Local Social Media App</h1>
+
+<nav>
+  <button id="btnLoginNav" onclick="showView('loginView')">Login</button>
+  <button id="btnSignupNav" onclick="showView('signupView')">Sign Up</button>
+  <button id="btnLogout" onclick="logout()" class="hidden">Logout</button>
+  <button id="btnProfile" onclick="showProfile()" class="hidden">My Profile</button>
+</nav>
+
+<div id="error"></div>
+
+<!-- Login View -->
+<div id="loginView" class="view">
+  <h2>Login</h2>
+  <input id="loginUsername" placeholder="Username" autocomplete="username" />
+  <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password" />
+  <button class="action-btn" id="btnLogin" onclick="login()" disabled>Login</button>
+</div>
+
+<!-- Signup View -->
+<div id="signupView" class="view hidden">
+  <h2>Sign Up</h2>
+  <input id="signupUsername" placeholder="Username" autocomplete="username" />
+  <input id="signupPassword" type="password" placeholder="Password" autocomplete="new-password" />
+  <button class="action-btn" id="btnSignup" onclick="signup()" disabled>Sign Up</button>
+</div>
+
+<!-- Feed View -->
+<div id="feedView" class="view hidden">
+  <h2>Welcome, <span id="currentUser"></span>!</h2>
+
+  <div id="searchSection">
+    <input id="searchInput" placeholder="Search users by username..." />
+    <button id="searchBtn" onclick="searchUsers()">Search</button>
+    <div id="searchResults"></div>
+  </div>
+
+  <textarea id="postContent" placeholder="What's on your mind?" rows="3"></textarea>
+  <button class="action-btn" id="btnPost" onclick="createPost()" disabled>Post</button>
+
+  <h3>Feed</h3>
+  <div id="feed"></div>
+</div>
+
+<!-- Profile View -->
+<div id="profileView" class="hidden">
+  <h3>Profile: <span id="profileUsername"></span></h3>
+  <button class="action-btn" onclick="backToFeed()">Back to Feed</button>
+  <h4>User's Posts</h4>
+  <div id="profilePosts"></div>
+</div>
+
+<script>
+// LocalStorage keys
+const USERS_KEY = "local_social_media_users";
+const POSTS_KEY = "local_social_media_posts";
+const SESSION_KEY = "local_social_media_session";
+
+// Utility: Escape HTML to prevent XSS
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function showView(viewId) {
+  document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+  document.getElementById(viewId).classList.remove('hidden');
+  document.getElementById('profileView').classList.add('hidden');
+  clearError();
+  updateNavButtons(viewId);
+  if(viewId === 'feedView') {
+    document.getElementById('searchInput').value = '';
+    clearSearchResults();
+  }
+}
+
+function updateNavButtons(currentView) {
+  const loggedIn = !!getSession();
+  document.getElementById('btnLogout').classList.toggle('hidden', !loggedIn);
+  document.getElementById('btnProfile').classList.toggle('hidden', !loggedIn);
+  document.getElementById('btnLoginNav').disabled = loggedIn;
+  document.getElementById('btnSignupNav').disabled = loggedIn;
+
+  if (currentView === 'feedView' && loggedIn) {
+    document.getElementById('btnLogout').disabled = false;
+    document.getElementById('btnProfile').disabled = false;
+  }
+}
+
+function clearError() {
+  document.getElementById('error').textContent = '';
+}
+
+function setError(msg) {
+  document.getElementById('error').textContent = msg;
+}
+
+function getUsers() {
+  return JSON.parse(localStorage.getItem(USERS_KEY) || '{}');
+}
+
+function saveUsers(users) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+
+function getPosts() {
+  return JSON.parse(localStorage.getItem(POSTS_KEY) || '[]');
+}
+
+function savePosts(posts) {
+  localStorage.setItem(POSTS_KEY, JSON.stringify(posts));
+}
+
+function setSession(username) {
+  localStorage.setItem(SESSION_KEY, username);
+}
+
+function getSession() {
+  return localStorage.getItem(SESSION_KEY);
+}
+
+function clearSession() {
+  localStorage.removeItem(SESSION_KEY);
+}
+
+// Enable/disable buttons based on input validation
+function validateLoginForm() {
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value.trim();
+  document.getElementById('btnLogin').disabled = !(username && password);
+}
+
+function validateSignupForm() {
+  const username = document.getElementById('signupUsername').value.trim();
+  const password = document.getElementById('signupPassword').value.trim();
+  document.getElementById('btnSignup').disabled = !(username && password);
+}
+
+function validatePostForm() {
+  const content = document.getElementById('postContent').value.trim();
+  document.getElementById('btnPost').disabled = !content;
+}
+
+document.getElementById('loginUsername').addEventListener('input', validateLoginForm);
+document.getElementById('loginPassword').addEventListener('input', validateLoginForm);
+document.getElementById('signupUsername').addEventListener('input', validateSignupForm);
+document.getElementById('signupPassword').addEventListener('input', validateSignupForm);
+document.getElementById('postContent').addEventListener('input', validatePostForm);
+
+function signup() {
+  clearError();
+  const username = document.getElementById('signupUsername').value.trim();
+  const password = document.getElementById('signupPassword').value.trim();
+  if(!username || !password) return setError('Please enter username and password.');
+
+  let users = getUsers();
+  if(users[username]) return setError('Username already exists.');
+
+  users[username] = { password };
+  saveUsers(users);
+  setSession(username);
+  document.getElementById('currentUser').textContent = username;
+  showView('feedView');
+  loadFeed();
+  clearSignupForm();
+  validateSignupForm();
+}
+
+function login() {
+  clearError();
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value.trim();
+  if(!username || !password) return setError('Please enter username and password.');
+
+  let users = getUsers();
+  if(!users[username] || users[username].password !== password) {
+    return setError('Invalid username or password.');
+  }
+
+  setSession(username);
+  document.getElementById('currentUser').textContent = username;
+  showView('feedView');
+  loadFeed();
+  clearLoginForm();
+  validateLoginForm();
+}
+
+function logout() {
+  clearSession();
+  showView('loginView');
+  clearLoginForm();
+  clearSignupForm();
+  validateLoginForm();
+  validateSignupForm();
+}
+
+function createPost() {
+  clearError();
+  const content = document.getElementById('postContent').value.trim();
+  if(!content) return setError('Post cannot be empty.');
+
+  const username = getSession();
+  if(!username) return setError('User not logged in.');
+
+  let posts = getPosts();
+  const post = {
+    id: Date.now(),
+    user: username,
+    content,
+    timestamp: new Date().toISOString(),
+    likes: 0,
+    likedBy: [],
+    comments: []
+  };
+  posts.unshift(post);
+  savePosts(posts);
+  document.getElementById('postContent').value = '';
+  document.getElementById('btnPost').disabled = true;
+  loadFeed();
+}
+
+function toggleLike(postId) {
+  let posts = getPosts();
+  const username = getSession();
+  posts = posts.map(post => {
+    if(post.id === postId) {
+      if(post.likedBy.includes(username)) {
+        post.likes--;
+        post.likedBy = post.likedBy.filter(u => u !== username);
+      } else {
+        post.likes++;
+        post.likedBy.push(username);
+      }
+    }
+    return post;
+  });
+  savePosts(posts);
+  loadFeed();
+}
+
+function addComment(postId) {
+  const commentInput = document.getElementById('commentInput-' + postId);
+  const commentText = commentInput.value.trim();
+  if(!commentText) {
+    alert('Comment cannot be empty.');
+    return;
+  }
+  const username = getSession();
+  if(!username) {
+    alert('You must be logged in to comment.');
+    return;
+  }
+  let posts = getPosts();
+  posts = posts.map(post => {
+    if(post.id === postId) {
+      post.comments.push({
+        id: Date.now(),
+        user: username,
+        content: commentText,
+        timestamp: new Date().toISOString()
+      });
+    }
+    return post;
+  });
+  savePosts(posts);
+  loadFeed();
+}
+
+function loadFeed() {
+  let posts = getPosts();
+  const feedDiv = document.getElementById('feed');
+  feedDiv.innerHTML = '';
+  if(posts.length === 0) {
+    feedDiv.innerHTML = '<p>No posts yet.</p>';
+    return;
+  }
+  posts.forEach(post => {
+    const liked = post.likedBy.includes(getSession());
+    const postDiv = document.createElement('div');
+    postDiv.className = 'post';
+    const date = new Date(post.timestamp).toLocaleString();
+
+    let commentsHtml = '';
+    if(post.comments.length > 0) {
+      commentsHtml = '<div class="comments-section">';
+      post.comments.forEach(c => {
+        const cDate = new Date(c.timestamp).toLocaleString();
+        commentsHtml += `<div class="comment"><strong>${escapeHtml(c.user)}</strong>: ${escapeHtml(c.content)} <br><small>${cDate}</small></div>`;
+      });
+      commentsHtml += '</div>';
+    }
+
+    postDiv.innerHTML = `
+      <div class="post-header">
+        <span onclick="showProfile('${escapeHtml(post.user)}')" style="cursor:pointer;">${escapeHtml(post.user)}</span>
+        <span>${date}</span>
+      </div>
+      <div class="post-content">${escapeHtml(post.content)}</div>
+      <div class="post-footer">
+        <button class="like-btn ${liked ? 'liked' : ''}" onclick="toggleLike(${post.id})">${liked ? 'Unlike' : 'Like'} (${post.likes})</button>
+      </div>
+      ${commentsHtml}
+      <div class="comment-input">
+        <textarea id="commentInput-${post.id}" rows="1" placeholder="Add a comment..."></textarea>
+        <button onclick="addComment(${post.id})">Comment</button>
+      </div>
+    `;
+    feedDiv.appendChild(postDiv);
+  });
+}
+
+function showProfile(username = null) {
+  clearError();
+  if(!username) {
+    username = getSession();
+  }
+  const users = getUsers();
+  if(!users[username]) {
+    setError("User not found.");
+    return;
+  }
+  document.getElementById('profileUsername').textContent = username;
+  document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+  document.getElementById('profileView').classList.remove('hidden');
+
+  const profilePostsDiv = document.getElementById('profilePosts');
+  const posts = getPosts().filter(p => p.user === username);
+  profilePostsDiv.innerHTML = '';
+  if(posts.length === 0) {
+    profilePostsDiv.innerHTML = '<p>No posts yet.</p>';
+  } else {
+    posts.forEach(post => {
+      const liked = post.likedBy.includes(getSession());
+      const postDiv = document.createElement('div');
+      postDiv.className = 'post';
+      const date = new Date(post.timestamp).toLocaleString();
+
+      let commentsHtml = '';
+      if(post.comments.length > 0) {
+        commentsHtml = '<div class="comments-section">';
+        post.comments.forEach(c => {
+          const cDate = new Date(c.timestamp).toLocaleString();
+          commentsHtml += `<div class="comment"><strong>${escapeHtml(c.user)}</strong>: ${escapeHtml(c.content)} <br><small>${cDate}</small></div>`;
+        });
+        commentsHtml += '</div>';
+      }
+
+      postDiv.innerHTML = `
+        <div class="post-header">
+          <span onclick="showProfile('${escapeHtml(post.user)}')" style="cursor:pointer;">${escapeHtml(post.user)}</span>
+          <span>${date}</span>
+        </div>
+        <div class="post-content">${escapeHtml(post.content)}</div>
+        <div class="post-footer">
+          <button class="like-btn ${liked ? 'liked' : ''}" onclick="toggleLike(${post.id})">${liked ? 'Unlike' : 'Like'} (${post.likes})</button>
+        </div>
+        ${commentsHtml}
+      `;
+      profilePostsDiv.appendChild(postDiv);
+    });
+  }
+  updateNavButtons('profileView');
+}
+
+function backToFeed() {
+  showView('feedView');
+  loadFeed();
+}
+
+function clearLoginForm() {
+  document.getElementById('loginUsername').value = '';
+  document.getElementById('loginPassword').value = '';
+  validateLoginForm();
+}
+
+function clearSignupForm() {
+  document.getElementById('signupUsername').value = '';
+  document.getElementById('signupPassword').value = '';
+  validateSignupForm();
+}
+
+function clearSearchResults() {
+  document.getElementById('searchResults').innerHTML = '';
+}
+
+function searchUsers() {
+  clearError();
+  const query = document.getElementById('searchInput').value.trim().toLowerCase();
+  const resultsDiv = document.getElementById('searchResults');
+  resultsDiv.innerHTML = '';
+  if(!query) {
+    return;
+  }
+  const users = getUsers();
+  const matched = Object.keys(users).filter(u => u.toLowerCase().includes(query));
+  if(matched.length === 0) {
+    resultsDiv.innerHTML = '<div class="search-result-item">No users found.</div>';
+    return;
+  }
+  matched.forEach(username => {
+    const div = document.createElement('div');
+    div.className = 'search-result-item';
+    div.textContent = username;
+    div.onclick = () => {
+      showProfile(username);
+      resultsDiv.innerHTML = '';
+      document.getElementById('searchInput').value = '';
+    };
+    resultsDiv.appendChild(div);
+  });
+}
+
+// On load
+window.onload = () => {
+  const sessionUser = getSession();
+  if(sessionUser) {
+    document.getElementById('currentUser').textContent = sessionUser;
+    showView('feedView');
+    loadFeed();
+  } else {
+    showView('loginView');
+  }
+};
+
+</script>
+
+</body>
+</html>

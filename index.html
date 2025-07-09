@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Local Social Media App</title>
+<title>Local Social Media App with Media Upload</title>
 <style>
   /* Reset and base */
   *, *::before, *::after {
@@ -166,6 +166,16 @@
     flex-shrink: 0;
     align-self: flex-end;
   }
+  /* Media in posts */
+  .post-media {
+    margin: 0.5rem 0;
+    max-width: 100%;
+    border-radius: 8px;
+  }
+  .post-media video {
+    max-width: 100%;
+    border-radius: 8px;
+  }
   /* Profile */
   #profileView {
     background: white;
@@ -281,6 +291,9 @@
   </div>
 
   <textarea id="postContent" placeholder="What's on your mind?" rows="3"></textarea>
+
+  <input type="file" id="mediaInput" accept="image/*,video/*" multiple style="margin-bottom:1rem;" />
+
   <button class="action-btn" id="btnPost" onclick="createPost()" disabled>Post</button>
 
   <h3>Feed</h3>
@@ -384,7 +397,7 @@ function validateSignupForm() {
 
 function validatePostForm() {
   const content = document.getElementById('postContent').value.trim();
-  document.getElementById('btnPost').disabled = !content;
+  document.getElementById('btnPost').disabled = !content && mediaInput.files.length === 0;
 }
 
 document.getElementById('loginUsername').addEventListener('input', validateLoginForm);
@@ -392,6 +405,8 @@ document.getElementById('loginPassword').addEventListener('input', validateLogin
 document.getElementById('signupUsername').addEventListener('input', validateSignupForm);
 document.getElementById('signupPassword').addEventListener('input', validateSignupForm);
 document.getElementById('postContent').addEventListener('input', validatePostForm);
+const mediaInput = document.getElementById('mediaInput');
+mediaInput.addEventListener('change', validatePostForm);
 
 function signup() {
   clearError();
@@ -438,15 +453,50 @@ function logout() {
   clearSignupForm();
   validateLoginForm();
   validateSignupForm();
+  clearPostForm();
 }
 
-function createPost() {
+function clearPostForm() {
+  document.getElementById('postContent').value = '';
+  mediaInput.value = '';
+  validatePostForm();
+}
+
+// Reads files (images/videos) as base64 strings, returns Promise of array
+function readMediaFiles(files) {
+  return Promise.all(
+    Array.from(files).map(file => {
+      return new Promise((res, rej) => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          // Return base64 + mime type info for rendering
+          res({ dataUrl: e.target.result, type: file.type });
+        };
+        reader.onerror = () => rej('Error reading file');
+        reader.readAsDataURL(file);
+      });
+    })
+  );
+}
+
+async function createPost() {
   clearError();
   const content = document.getElementById('postContent').value.trim();
-  if(!content) return setError('Post cannot be empty.');
 
   const username = getSession();
   if(!username) return setError('User not logged in.');
+
+  // Read media files (if any)
+  let mediaFiles = [];
+  if(mediaInput.files.length > 0) {
+    try {
+      mediaFiles = await readMediaFiles(mediaInput.files);
+    } catch {
+      return setError('Failed to read media files.');
+    }
+  }
+
+  if(!content && mediaFiles.length === 0) return setError('Post cannot be empty.');
 
   let posts = getPosts();
   const post = {
@@ -456,12 +506,12 @@ function createPost() {
     timestamp: new Date().toISOString(),
     likes: 0,
     likedBy: [],
-    comments: []
+    comments: [],
+    media: mediaFiles // array of {dataUrl, type}
   };
   posts.unshift(post);
   savePosts(posts);
-  document.getElementById('postContent').value = '';
-  document.getElementById('btnPost').disabled = true;
+  clearPostForm();
   loadFeed();
 }
 
@@ -512,6 +562,19 @@ function addComment(postId) {
   loadFeed();
 }
 
+function renderMedia(mediaArray) {
+  if(!mediaArray || mediaArray.length === 0) return '';
+
+  return mediaArray.map(m => {
+    if(m.type.startsWith('image/')) {
+      return `<img class="post-media" src="${m.dataUrl}" alt="User image"/>`;
+    } else if(m.type.startsWith('video/')) {
+      return `<video class="post-media" controls src="${m.dataUrl}"></video>`;
+    }
+    return '';
+  }).join('');
+}
+
 function loadFeed() {
   let posts = getPosts();
   const feedDiv = document.getElementById('feed');
@@ -542,6 +605,7 @@ function loadFeed() {
         <span>${date}</span>
       </div>
       <div class="post-content">${escapeHtml(post.content)}</div>
+      ${renderMedia(post.media)}
       <div class="post-footer">
         <button class="like-btn ${liked ? 'liked' : ''}" onclick="toggleLike(${post.id})">${liked ? 'Unlike' : 'Like'} (${post.likes})</button>
       </div>
@@ -597,6 +661,7 @@ function showProfile(username = null) {
           <span>${date}</span>
         </div>
         <div class="post-content">${escapeHtml(post.content)}</div>
+        ${renderMedia(post.media)}
         <div class="post-footer">
           <button class="like-btn ${liked ? 'liked' : ''}" onclick="toggleLike(${post.id})">${liked ? 'Unlike' : 'Like'} (${post.likes})</button>
         </div>

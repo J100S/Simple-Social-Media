@@ -5,9 +5,68 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SupaSocial</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Ensure the body background and text color are visible */
+    body, html {
+      margin: 0; padding: 0; height: 100%;
+      background-color: #121212;
+      color: #eee;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #1e1e1e;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 2px solid #4ac1ff;
+    }
+
+    header h1 {
+      margin: 0;
+      color: #4ac1ff;
+      font-size: 2.5rem;
+    }
+
+    #root {
+      flex: 1 0 auto;
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: #1e1e1e;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.7);
+    }
+
+    footer {
+      flex-shrink: 0;
+      text-align: center;
+      padding: 15px 10px;
+      font-size: 0.9rem;
+      color: #666;
+    }
+  </style>
 </head>
 <body>
-  <div id="root"></div>
+  <header>
+    <h1>SupaSocial</h1>
+  </header>
+
+  <main id="root">
+    <!-- React app will load here -->
+    <noscript>
+      <p style="color: orange; text-align: center;">
+        JavaScript is disabled. Please enable JavaScript to use this app.
+      </p>
+    </noscript>
+  </main>
+
+  <footer>
+    &copy; 2025 Daa Games — Built with Supabase & React
+  </footer>
+
   <script type="module" src="main.js"></script>
 </body>
 </html>

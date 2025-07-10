@@ -1,71 +1,43 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Supabase Social Media</title>
-<link rel="stylesheet" href="style.css" />
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
-<script defer src="main.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Supabase Social Feed</title>
+  <!-- Tailwind via CDN for quick styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-
-<header>
-  <h1>Supabase Social Media</h1>
-  <nav id="navButtons">
-    <button id="btnLoginNav">Login</button>
-    <button id="btnSignupNav">Sign Up</button>
-    <button id="btnLogout" class="hidden">Logout</button>
-    <button id="btnProfile" class="hidden">My Profile</button>
-  </nav>
-</header>
-
-<section id="errorMsg" role="alert"></section>
-
-<!-- Login -->
-<section id="loginView" class="view">
-  <h2>Login</h2>
-  <input type="email" id="loginEmail" placeholder="Email" autocomplete="username" />
-  <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" />
-  <button id="btnLogin" disabled>Login</button>
-</section>
-
-<!-- Signup -->
-<section id="signupView" class="view hidden">
-  <h2>Sign Up</h2>
-  <input type="email" id="signupEmail" placeholder="Email" autocomplete="username" />
-  <input type="text" id="signupUsername" placeholder="Username" />
-  <input type="password" id="signupPassword" placeholder="Password" autocomplete="new-password" />
-  <button id="btnSignup" disabled>Sign Up</button>
-</section>
-
-<!-- Feed -->
-<section id="feedView" class="view hidden">
-  <h2>Welcome, <span id="currentUserName"></span>!</h2>
-
-  <div id="postForm">
-    <textarea id="postContent" placeholder="What's on your mind?" rows="3"></textarea>
-    <input type="file" id="mediaInput" accept="image/*,video/*" multiple />
-    <button id="btnPost" disabled>Post</button>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center p-4">
+  <div id="auth-container" class="w-full max-w-md mt-8 bg-white p-6 rounded shadow">
+    <h2 class="text-2xl font-bold mb-4">Sign In / Sign Up</h2>
+    <input id="email-input" type="email" placeholder="you@example.com"
+      class="w-full px-3 py-2 border rounded mb-3 focus:outline-none focus:ring"/>
+    <button id="auth-btn" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+      Send Magic Link
+    </button>
   </div>
 
-  <div id="feed"></div>
-</section>
+  <div id="app" class="hidden w-full max-w-xl mt-8">
+    <div class="mb-6 flex justify-between items-center">
+      <h1 class="text-3xl font-bold">Your Feed</h1>
+      <button id="signout-btn" class="text-red-500 hover:underline">Sign Out</button>
+    </div>
 
-<!-- Profile -->
-<section id="profileView" class="view hidden">
-  <h2>Profile: <span id="profileUsername"></span></h2>
-  <button id="btnBackToFeed">Back to Feed</button>
-  <div id="profilePosts"></div>
-</section>
+    <!-- New Post Form -->
+    <form id="post-form" class="mb-6 bg-white p-4 rounded shadow">
+      <textarea id="post-content" rows="3" placeholder="What's on your mind?"
+        class="w-full px-3 py-2 border rounded mb-2 focus:outline-none focus:ring"></textarea>
+      <input id="post-file" type="file" accept="image/*" class="mb-2"/>
+      <button class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+        Post
+      </button>
+    </form>
 
-<!-- Search -->
-<section id="searchView" class="view hidden">
-  <h2>Search Users</h2>
-  <input type="text" id="searchInput" placeholder="Search users by username..." />
-  <button id="btnSearch">Search</button>
-  <div id="searchResults"></div>
-</section>
+    <!-- Feed -->
+    <div id="feed" class="space-y-4"></div>
+  </div>
 
+  <script type="module" src="script.js"></script>
 </body>
 </html>

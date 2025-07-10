@@ -2,30 +2,90 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Supabase Social App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Supabase Social Media</title>
   <link rel="stylesheet" href="styles.css" />
-  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
   <script defer src="main.js"></script>
 </head>
 <body>
-  <header>
-    <h1>📱 Social Feed</h1>
-    <div id="auth">
-      <input id="username" placeholder="Username" />
-      <button id="login-btn">Login</button>
-      <button id="logout-btn" style="display:none">Logout</button>
+  <div class="container" role="main">
+    <header>
+      <h1>Supabase Social Media</h1>
+      <nav aria-label="Main navigation">
+        <button id="btnLoginNav" type="button" aria-controls="loginView" aria-expanded="false" aria-haspopup="true">Login</button>
+        <button id="btnSignupNav" type="button" aria-controls="signupView" aria-expanded="false" aria-haspopup="true">Sign Up</button>
+        <button id="btnLogout" type="button" class="hidden">Logout</button>
+        <button id="btnProfile" type="button" class="hidden">My Profile</button>
+      </nav>
+    </header>
+
+    <section id="errorMessage" role="alert" aria-live="assertive" class="error-message" aria-hidden="true"></section>
+
+    <!-- Login view -->
+    <section id="loginView" class="view" role="region" aria-label="Login Form" tabindex="-1">
+      <h2>Login</h2>
+      <form id="loginForm" novalidate>
+        <label for="loginEmail">Email:</label>
+        <input type="email" id="loginEmail" name="loginEmail" autocomplete="email" placeholder="you@example.com" required />
+        <label for="loginPassword">Password:</label>
+        <input type="password" id="loginPassword" name="loginPassword" autocomplete="current-password" placeholder="••••••••" required minlength="8" />
+        <button type="submit" class="primary-btn" id="btnLogin" disabled>Login</button>
+      </form>
+    </section>
+
+    <!-- Signup view -->
+    <section id="signupView" class="view hidden" role="region" aria-label="Sign Up Form" tabindex="-1">
+      <h2>Sign Up</h2>
+      <form id="signupForm" novalidate>
+        <label for="signupEmail">Email:</label>
+        <input type="email" id="signupEmail" name="signupEmail" autocomplete="email" placeholder="you@example.com" required />
+        <label for="signupUsername">Username:</label>
+        <input type="text" id="signupUsername" name="signupUsername" autocomplete="username" placeholder="Your username" required minlength="3" />
+        <label for="signupPassword">Password:</label>
+        <input type="password" id="signupPassword" name="signupPassword" autocomplete="new-password" placeholder="••••••••" required minlength="8" />
+        <label for="signupPasswordConfirm">Confirm Password:</label>
+        <input type="password" id="signupPasswordConfirm" name="signupPasswordConfirm" autocomplete="new-password" placeholder="••••••••" required minlength="8" />
+        <button type="submit" class="primary-btn" id="btnSignup" disabled>Sign Up</button>
+      </form>
+    </section>
+
+    <!-- Feed View -->
+    <section id="feedView" class="view hidden" role="region" aria-label="Feed">
+      <div class="search-bar" role="search">
+        <input type="text" id="searchInput" placeholder="Search posts or users..." aria-label="Search posts or users" />
+        <button id="btnSearch" type="button" aria-label="Search">Search</button>
+        <button id="btnClearSearch" type="button" aria-label="Clear Search" class="hidden">Clear</button>
+      </div>
+
+      <form id="postForm" aria-label="Create a new post" novalidate>
+        <textarea id="postText" name="postText" placeholder="What's on your mind?" rows="3" maxlength="1000" required></textarea>
+        <input type="file" id="postMedia" accept="image/*,video/*" aria-label="Upload an image or video" />
+        <button type="submit" class="primary-btn" id="btnPost" disabled>Post</button>
+      </form>
+
+      <section id="feed" class="feed" aria-live="polite" aria-relevant="additions"></section>
+    </section>
+
+    <!-- Profile View -->
+    <section id="profileView" class="view hidden" role="region" aria-label="User Profile">
+      <button id="btnBackToFeed" type="button" aria-label="Back to feed">← Back to Feed</button>
+      <div class="profile">
+        <h2 id="profileUsername">Username</h2>
+        <p id="profileEmail">email@example.com</p>
+        <p id="profileBio">This is your bio. Update it to tell people about yourself.</p>
+        <form id="profileForm" novalidate>
+          <label for="profileBioInput">Update Bio:</label>
+          <textarea id="profileBioInput" maxlength="300" rows="4"></textarea>
+          <button type="submit" class="primary-btn" id="btnUpdateProfile">Update Profile</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Modal / Loading -->
+    <div id="loadingModal" class="hidden" role="alert" aria-live="assertive" aria-modal="true" aria-label="Loading">
+      <p>Loading... Please wait.</p>
     </div>
-  </header>
-
-  <section id="post-section" style="display:none">
-    <textarea id="post-text" placeholder="What's on your mind?"></textarea>
-    <input type="file" id="media-upload" accept="image/*,video/*" />
-    <button id="post-btn">Post</button>
-  </section>
-
-  <main>
-    <div id="feed"></div>
-  </main>
+  </div>
 </body>
 </html>

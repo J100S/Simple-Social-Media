@@ -5,41 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Supabase Social Media App</title>
   <link rel="stylesheet" href="styles.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="main.js"></script>
 </head>
 <body>
-  <h1>Supabase Social Media</h1>
+  <h1>Supabase Social Media App</h1>
 
   <nav>
-    <button onclick="showLogin()">Login</button>
-    <button onclick="showSignup()">Sign Up</button>
-    <button onclick="logout()" id="logoutBtn" hidden>Logout</button>
+    <button id="loginBtn">Login</button>
+    <button id="signupBtn">Sign Up</button>
+    <button id="logoutBtn" class="hidden">Logout</button>
   </nav>
 
   <div id="authView">
-    <div id="loginForm">
-      <h2>Login</h2>
-      <input type="email" id="loginEmail" placeholder="Email" />
-      <input type="password" id="loginPassword" placeholder="Password" />
-      <button onclick="login()">Login</button>
-    </div>
-
-    <div id="signupForm" hidden>
-      <h2>Sign Up</h2>
-      <input type="email" id="signupEmail" placeholder="Email" />
-      <input type="password" id="signupPassword" placeholder="Password" />
-      <button onclick="signup()">Sign Up</button>
-    </div>
+    <input type="email" id="emailInput" placeholder="Email" />
+    <input type="password" id="passwordInput" placeholder="Password" />
+    <button id="authActionBtn">Submit</button>
+    <p id="authError"></p>
   </div>
 
-  <div id="appView" hidden>
-    <h2>Welcome, <span id="userEmail"></span></h2>
+  <div id="postView" class="hidden">
     <textarea id="postContent" placeholder="What's on your mind?"></textarea>
-    <input type="file" id="mediaUpload" accept="image/*,video/*" />
-    <button onclick="createPost()">Post</button>
-
+    <button id="postBtn">Post</button>
     <div id="feed"></div>
   </div>
+
+  <script type="module" src="main.js"></script>
 </body>
 </html>

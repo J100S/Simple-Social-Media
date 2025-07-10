@@ -1,66 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Local Social Media App with Supabase</title>
-
-  <!-- Supabase JS SDK -->
-  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
-  
-  <script defer src="main.js"></script>
-
-  <style>
-    /* Basic styles, expand as needed */
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      max-width: 700px;
-      margin: 1rem auto;
-      padding: 1rem;
-      background: #f5f7fa;
-      color: #333;
-    }
-    header nav {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    button {
-      padding: 0.5rem 1.2rem;
-      border: none;
-      border-radius: 25px;
-      background: #0078d4;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.25s ease;
-    }
-    button:disabled {
-      background: #a1a1a1;
-      cursor: not-allowed;
-    }
-    section {
-      background: white;
-      padding: 1rem 1.5rem;
-      border-radius: 10px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-      margin-bottom: 1rem;
-    }
-    .hidden { display: none !important; }
-    input, textarea {
-      width: 100%;
-      padding: 0.6rem 0.8rem;
-      margin: 0.5rem 0 1rem;
-      border: 1.8px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Supabase Social Media</title>
+<link rel="stylesheet" href="style.css" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+<script defer src="main.js"></script>
 </head>
 <body>
 
 <header>
-  <nav>
+  <h1>Supabase Social Media</h1>
+  <nav id="navButtons">
     <button id="btnLoginNav">Login</button>
     <button id="btnSignupNav">Sign Up</button>
     <button id="btnLogout" class="hidden">Logout</button>
@@ -68,48 +20,52 @@
   </nav>
 </header>
 
-<main>
+<section id="errorMsg" role="alert"></section>
 
-  <!-- Login -->
-  <section id="loginView" class="view">
-    <h2>Login</h2>
-    <input id="loginEmail" type="email" placeholder="Email" autocomplete="username" />
-    <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password" />
-    <button id="btnLogin" disabled>Login</button>
-  </section>
+<!-- Login -->
+<section id="loginView" class="view">
+  <h2>Login</h2>
+  <input type="email" id="loginEmail" placeholder="Email" autocomplete="username" />
+  <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" />
+  <button id="btnLogin" disabled>Login</button>
+</section>
 
-  <!-- Signup -->
-  <section id="signupView" class="view hidden">
-    <h2>Sign Up</h2>
-    <input id="signupEmail" type="email" placeholder="Email" autocomplete="email" />
-    <input id="signupUsername" type="text" placeholder="Username" autocomplete="username" />
-    <input id="signupPassword" type="password" placeholder="Password" autocomplete="new-password" />
-    <input id="signupPasswordConfirm" type="password" placeholder="Confirm Password" autocomplete="new-password" />
-    <button id="btnSignup" disabled>Sign Up</button>
-  </section>
+<!-- Signup -->
+<section id="signupView" class="view hidden">
+  <h2>Sign Up</h2>
+  <input type="email" id="signupEmail" placeholder="Email" autocomplete="username" />
+  <input type="text" id="signupUsername" placeholder="Username" />
+  <input type="password" id="signupPassword" placeholder="Password" autocomplete="new-password" />
+  <button id="btnSignup" disabled>Sign Up</button>
+</section>
 
-  <!-- Feed -->
-  <section id="feedView" class="view hidden">
-    <h2>Welcome, <span id="currentUser"></span>!</h2>
+<!-- Feed -->
+<section id="feedView" class="view hidden">
+  <h2>Welcome, <span id="currentUserName"></span>!</h2>
 
+  <div id="postForm">
     <textarea id="postContent" placeholder="What's on your mind?" rows="3"></textarea>
     <input type="file" id="mediaInput" accept="image/*,video/*" multiple />
     <button id="btnPost" disabled>Post</button>
+  </div>
 
-    <h3>Feed</h3>
-    <div id="feed"></div>
-  </section>
+  <div id="feed"></div>
+</section>
 
-  <!-- Profile -->
-  <section id="profileView" class="view hidden">
-    <h2 id="profileUsername"></h2>
-    <button id="btnBackToFeed">Back to Feed</button>
-    <div id="profilePosts"></div>
-  </section>
+<!-- Profile -->
+<section id="profileView" class="view hidden">
+  <h2>Profile: <span id="profileUsername"></span></h2>
+  <button id="btnBackToFeed">Back to Feed</button>
+  <div id="profilePosts"></div>
+</section>
 
-</main>
-
-<div id="error" style="color:#d93025; margin-top:1rem; min-height:1.2rem;"></div>
+<!-- Search -->
+<section id="searchView" class="view hidden">
+  <h2>Search Users</h2>
+  <input type="text" id="searchInput" placeholder="Search users by username..." />
+  <button id="btnSearch">Search</button>
+  <div id="searchResults"></div>
+</section>
 
 </body>
 </html>

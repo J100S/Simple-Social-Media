@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SupaSocial</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>SupaSocial - All in One</title>
+
   <style>
-    /* Ensure the body background and text color are visible */
+    /* -------- CSS Styles -------- */
+
     body, html {
       margin: 0; padding: 0; height: 100%;
       background-color: #121212;
@@ -22,6 +23,7 @@
       padding: 20px;
       text-align: center;
       border-bottom: 2px solid #4ac1ff;
+      flex-shrink: 0;
     }
 
     header h1 {
@@ -30,7 +32,7 @@
       font-size: 2.5rem;
     }
 
-    #root {
+    main {
       flex: 1 0 auto;
       max-width: 900px;
       margin: 30px auto;
@@ -40,13 +42,182 @@
       box-shadow: 0 0 20px rgba(0,0,0,0.7);
     }
 
-    footer {
-      flex-shrink: 0;
-      text-align: center;
-      padding: 15px 10px;
-      font-size: 0.9rem;
-      color: #666;
+    .auth-container {
+      max-width: 400px;
+      margin: 0 auto;
     }
+
+    input, textarea, button {
+      font-family: inherit;
+    }
+
+    .auth-container input,
+    .new-post textarea,
+    .comment-input input {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      background-color: #2a2a2a;
+      color: #eee;
+      box-sizing: border-box;
+    }
+
+    .auth-container button,
+    .new-post button,
+    .comment-input button {
+      width: 48%;
+      padding: 12px 0;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+      background-color: #4ac1ff;
+      transition: background-color 0.3s ease;
+      margin-right: 4%;
+    }
+
+    .auth-container button:last-child {
+      background-color: #34d399;
+      margin-right: 0;
+    }
+
+    .auth-container button:hover,
+    .new-post button:hover,
+    .comment-input button:hover {
+      opacity: 0.9;
+    }
+
+    .new-post {
+      margin-bottom: 30px;
+    }
+
+    .new-post textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .new-post input[type="file"] {
+      margin-top: 10px;
+      color: #eee;
+    }
+
+    .post {
+      background-color: #292929;
+      padding: 20px;
+      margin-bottom: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.4);
+      word-wrap: break-word;
+    }
+
+    .post p {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      margin: 0 0 15px 0;
+      white-space: pre-wrap;
+    }
+
+    .post small {
+      color: #999;
+      display: block;
+      margin-bottom: 15px;
+    }
+
+    .post img.post-image {
+      max-width: 100%;
+      max-height: 400px;
+      border-radius: 12px;
+      display: block;
+      margin-bottom: 15px;
+      object-fit: contain;
+    }
+
+    .comment-section {
+      border-top: 1px solid #444;
+      padding-top: 15px;
+    }
+
+    .comment {
+      margin-left: 15px;
+      font-size: 0.9rem;
+      color: #ccc;
+      margin-bottom: 10px;
+      word-wrap: break-word;
+    }
+
+    .comment-input {
+      display: flex;
+      margin-top: 10px;
+    }
+
+    .comment-input input {
+      flex-grow: 1;
+      border-radius: 10px 0 0 10px;
+      border: none;
+      padding: 10px 15px;
+      background-color: #2a2a2a;
+      color: #eee;
+      font-size: 1rem;
+    }
+
+    .comment-input button {
+      background-color: #34d399;
+      border: none;
+      padding: 10px 20px;
+      color: white;
+      border-radius: 0 10px 10px 0;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .comment-input button:hover {
+      background-color: #2eb47b;
+    }
+
+    .profile {
+      background-color: #2a2a2a;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 25px;
+      text-align: center;
+      box-shadow: 0 0 8px rgba(0,0,0,0.4);
+    }
+
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+      border: 3px solid #4ac1ff;
+      display: inline-block;
+      line-height: 120px;
+      font-size: 3rem;
+      color: #4ac1ff;
+      background-color: #222;
+      user-select: none;
+    }
+
+    .profile-username {
+      font-size: 1.6rem;
+      color: #4ac1ff;
+      margin-bottom: 10px;
+    }
+
+    .profile-email {
+      color: #aaa;
+      font-size: 1rem;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
   </style>
 </head>
 <body>
@@ -55,18 +226,253 @@
   </header>
 
   <main id="root">
-    <!-- React app will load here -->
-    <noscript>
-      <p style="color: orange; text-align: center;">
-        JavaScript is disabled. Please enable JavaScript to use this app.
-      </p>
-    </noscript>
+    <!-- React app will mount here -->
   </main>
 
-  <footer>
+  <footer style="flex-shrink: 0; text-align:center; padding:15px 10px; font-size:0.9rem; color:#666;">
     &copy; 2025 Daa Games — Built with Supabase & React
   </footer>
 
-  <script type="module" src="main.js"></script>
+  <!-- React + ReactDOM from CDN -->
+  <script crossorigin src="https://esm.sh/react@18.2.0"></script>
+  <script crossorigin src="https://esm.sh/react-dom@18.2.0/client"></script>
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+
+  <script type="text/javascript">
+    const { useState, useEffect, createElement } = React;
+    const ReactDOMClient = ReactDOM;
+
+    // Replace with your Supabase URL and anon key
+    const SUPABASE_URL = 'https://mpillgefmlzrtjqtzona.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1waWxsZ2VmbWx6cnRqcXR6b25hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIxMTIzMDcsImV4cCI6MjA2NzY4ODMwN30.-7hy7cdvZiLLP-dogk-goBcu3SnRWHoCg1g6DcBBoS0';
+
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    function Auth({ setSession }) {
+      const [email, setEmail] = useState('');
+      const [password, setPassword] = useState('');
+      const [loading, setLoading] = useState(false);
+      const [message, setMessage] = useState('');
+
+      async function signIn() {
+        setLoading(true);
+        setMessage('');
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        setLoading(false);
+        if (error) setMessage(error.message);
+        else setSession(data.session);
+      }
+
+      async function signUp() {
+        setLoading(true);
+        setMessage('');
+        const { data, error } = await supabase.auth.signUp({ email, password });
+        setLoading(false);
+        if (error) setMessage(error.message);
+        else setMessage('Signup successful! Check your email for confirmation.');
+      }
+
+      return createElement('div', { className: 'auth-container' },
+        createElement('h2', null, 'Login / Register'),
+        createElement('input', {
+          type: 'email',
+          placeholder: 'Email',
+          value: email,
+          onChange: e => setEmail(e.target.value),
+          disabled: loading
+        }),
+        createElement('input', {
+          type: 'password',
+          placeholder: 'Password',
+          value: password,
+          onChange: e => setPassword(e.target.value),
+          disabled: loading
+        }),
+        createElement('div', { style: { display: 'flex', justifyContent: 'space-between' } },
+          createElement('button', { onClick: signIn, disabled: loading }, 'Sign In'),
+          createElement('button', { onClick: signUp, disabled: loading }, 'Sign Up'),
+        ),
+        message && createElement('p', { style: { marginTop: '10px', color: 'orange' } }, message)
+      );
+    }
+
+    function NewPost({ session, refreshPosts }) {
+      const [content, setContent] = useState('');
+      const [image, setImage] = useState(null);
+      const [loading, setLoading] = useState(false);
+
+      async function handlePost() {
+        if (!content.trim() && !image) {
+          alert("Post something or upload an image!");
+          return;
+        }
+        setLoading(true);
+
+        let imageUrl = null;
+        if (image) {
+          const fileExt = image.name.split('.').pop();
+          const fileName = `${session.user.id}/${Date.now()}.${fileExt}`;
+          const { error: uploadError } = await supabase.storage.from('post-images').upload(fileName, image);
+          if (uploadError) {
+            alert('Error uploading image: ' + uploadError.message);
+            setLoading(false);
+            return;
+          }
+          const { data } = supabase.storage.from('post-images').getPublicUrl(fileName);
+          imageUrl = data.publicUrl;
+        }
+
+        const { error } = await supabase.from('posts').insert({
+          content,
+          user_id: session.user.id,
+          image_url: imageUrl
+        });
+
+        if (error) alert('Error creating post: ' + error.message);
+
+        setContent('');
+        setImage(null);
+        setLoading(false);
+        refreshPosts();
+      }
+
+      return createElement('div', { className: 'new-post' },
+        createElement('textarea', {
+          placeholder: "What's on your mind?",
+          value: content,
+          onChange: e => setContent(e.target.value),
+          disabled: loading
+        }),
+        createElement('input', {
+          type: 'file',
+          accept: 'image/*',
+          onChange: e => setImage(e.target.files[0]),
+          disabled: loading
+        }),
+        createElement('button', { onClick: handlePost, disabled: loading },
+          loading ? 'Posting...' : 'Post'
+        )
+      );
+    }
+
+    function CommentSection({ postId }) {
+      const [comments, setComments] = useState([]);
+      const [text, setText] = useState('');
+      const [loading, setLoading] = useState(false);
+
+      async function fetchComments() {
+        const { data, error } = await supabase.from('comments').select('id, content').eq('post_id', postId).order('created_at');
+        if (!error) setComments(data);
+      }
+
+      async function submitComment() {
+        if (!text.trim()) return;
+        setLoading(true);
+        const { error } = await supabase.from('comments').insert({ post_id: postId, content: text });
+        if (error) alert('Error posting comment: ' + error.message);
+        setText('');
+        setLoading(false);
+        fetchComments();
+      }
+
+      useEffect(() => {
+        fetchComments();
+      }, []);
+
+      return createElement('div', { className: 'comment-section' },
+        comments.map(c => createElement('div', { key: c.id, className: 'comment' }, c.content)),
+        createElement('div', { className: 'comment-input' },
+          createElement('input', {
+            placeholder: 'Write a comment...',
+            value: text,
+            onChange: e => setText(e.target.value),
+            disabled: loading
+          }),
+          createElement('button', { onClick: submitComment, disabled: loading }, 'Comment')
+        )
+      );
+    }
+
+    function UserProfile({ userId }) {
+      const [profile, setProfile] = useState(null);
+
+      useEffect(() => {
+        async function fetchProfile() {
+          const { data, error } = await supabase.from('profiles').select('username, avatar_url').eq('id', userId).single();
+          if (!error) setProfile(data);
+        }
+        fetchProfile();
+      }, [userId]);
+
+      if (!profile) return createElement('p', null, 'Loading profile...');
+
+      return createElement('div', { className: 'profile' },
+        profile.avatar_url
+          ? createElement('img', { src: profile.avatar_url, alt: 'avatar', className: 'profile-avatar' })
+          : createElement('div', { className: 'profile-avatar' }, profile.username ? profile.username[0].toUpperCase() : '?'),
+        createElement('div', { className: 'profile-username' }, profile.username || 'Unknown User')
+      );
+    }
+
+    function PostList({ session }) {
+      const [posts, setPosts] = useState([]);
+      const [selectedUserId, setSelectedUserId] = useState(null);
+
+      async function fetchPosts() {
+        const { data, error } = await supabase.from('posts').select('*').order('created_at', { ascending: false });
+        if (!error) setPosts(data);
+      }
+
+      useEffect(() => {
+        fetchPosts();
+      }, []);
+
+      if (selectedUserId) {
+        return createElement('div', null,
+          createElement('button', { onClick: () => setSelectedUserId(null), style: { marginBottom: '20px' } }, '← Back to Feed'),
+          createElement(UserProfile, { userId: selectedUserId })
+        );
+      }
+
+      return createElement('div', null,
+        createElement(NewPost, { session, refreshPosts: fetchPosts }),
+        createElement('h2', null, 'Feed'),
+        posts.length === 0 && createElement('p', null, 'No posts yet.'),
+        posts.map(post =>
+          createElement('div', { className: 'post', key: post.id },
+            createElement('p', {
+              onClick: () => setSelectedUserId(post.user_id),
+              style: { cursor: 'pointer', fontWeight: 'bold', color: '#4ac1ff' }
+            }, post.user_id),
+            createElement('p', null, post.content),
+            post.image_url && createElement('img', { src: post.image_url, alt: 'post', className: 'post-image' }),
+            createElement('small', null, new Date(post.created_at).toLocaleString()),
+            createElement(CommentSection, { postId: post.id })
+          )
+        )
+      );
+    }
+
+    function App() {
+      const [session, setSession] = useState(null);
+
+      useEffect(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+        const { subscription } = supabase.auth.onAuthStateChange((_event, session) => {
+          setSession(session);
+        });
+        return () => subscription?.unsubscribe();
+      }, []);
+
+      return createElement('div', null,
+        createElement('h1', { style: { textAlign: 'center', color: '#4ac1ff' } }, 'SupaSocial'),
+        !session ? createElement(Auth, { setSession }) : createElement(PostList, { session })
+      );
+    }
+
+    const root = ReactDOMClient.createRoot(document.getElementById('root'));
+    root.render(createElement(App));
+  </script>
 </body>
 </html>
